@@ -22,9 +22,20 @@ export default class MyComponent extends Component {
         });
     }
 
+    onRemove(index) {
+
+        let clicked = this.state.clicked;
+        clicked.splice(index, 1);
+
+        this.setState({
+            clicked: clicked
+        });
+    }
+
     render() {
 
-        var clicks = this.state.clicked.map(click => (<li>. Clicked at {click.toISOString()}</li>));
+        var clicks = this.state.clicked.map((click, index) =>
+            (<li>. Clicked at {click.toISOString()} <button onClick={this.onRemove.bind(this, index)}>Remove</button></li>));
 
         return (
             <div>
