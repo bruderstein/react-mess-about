@@ -6,22 +6,33 @@ export default class MyComponent extends Component {
     constructor() {
         super();
         this.state = {
-            count: 0
+            clicked: []
         };
 
         this.onClick = this.onClick.bind(this);
     }
 
     onClick() {
+
+        let clicked = this.state.clicked;
+        clicked.push(new Date());
+
         this.setState({
-            count: this.state.count + 1
+            clicked: clicked
         });
     }
 
     render() {
 
+        var clicks = this.state.clicked.map(click => (<li>. Clicked at {click.toISOString()}</li>));
+
         return (
-            <button onClick={this.onClick}>Button was clicked {this.state.count} times</button>
+            <div>
+                <button onClick={this.onClick}>Button was clicked {this.state.clicked.length} times</button>
+                <ul>
+                    {clicks}
+                </ul>
+            </div>
         );
     }
 }
