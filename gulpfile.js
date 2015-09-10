@@ -8,10 +8,12 @@ var Source = require('vinyl-source-stream');
 var SourceMaps = require('gulp-sourcemaps');
 var Concat = require('gulp-concat');
 var GBuffer = require('gulp-buffer');
+var Errorify = require('errorify');
 
 var outputPath = 'build';
 
 function addBundleOptions(bundle) {
+    bundle.plugin(Errorify);
     bundle.transform(Babelify);
     bundle.add(__dirname + '/src/start.js');
     return bundle;
@@ -28,6 +30,11 @@ Gulp.task('start-watchify', function () {
         writeBundle(bundle)
     });
 
+    bundle.on('error', function (err) {
+        // TODO: Add gulp-util
+        console.log('Browserify error:', err);
+    })
+
 });
 
 
@@ -36,7 +43,7 @@ function writeBundle(bundle) {
         .pipe(Source('app.js'))
         .pipe(GBuffer())
         .pipe(SourceMaps.init({ loadMaps: true }))
-        .pipe(SourceMaps.write('../maps'))
+        .pipe(SourceMaps.write())
         .pipe(Gulp.dest(Path.join(outputPath, 'js')));
 }
 
