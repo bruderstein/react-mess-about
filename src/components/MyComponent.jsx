@@ -1,15 +1,28 @@
 
 import React, { Component } from 'react';
+import SuperAgent from 'superagent';
+import Count from './Count';
 
 export default class MyComponent extends Component {
 
     constructor() {
         super();
         this.state = {
-            clicked: []
+            clicked: [],
+            isLoading: true,
+            count: 0
         };
 
         this.onClick = this.onClick.bind(this);
+    }
+
+    componentWillMount() {
+        SuperAgent.get('/api/slow').then((result) =>
+            this.setState({
+                count: result.body.count,
+                isLoading: false
+            })
+        )
     }
 
     onClick() {
@@ -39,6 +52,7 @@ export default class MyComponent extends Component {
 
         return (
             <div>
+                <Count isLoading={this.state.isLoading} count={this.state.count} />
                 <button onClick={this.onClick}>Button was clicked {this.state.clicked.length} times</button>
                 <ul>
                     {clicks}
